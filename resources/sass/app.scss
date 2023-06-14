@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+$primary: #FF6100;
+@import './base/bootstrap';
+@import './base/bootstrap-extended';
+@import './base/colors';
+@import './base/components';
+@import './base/core/menu/menu-types/vertical-menu.scss';
+@import './base/themes/dark-layout.scss';
+@import "./base/pages/app-chat.scss";
+@import "./base/plugins/forms/select2/select2.scss";
+@import "./base/plugins/forms/form-wizard.scss";
+@import "./preloader.sass";
+html body {
+    background: #ffffff !important;
+    scroll-behavior: smooth !important;
+}
+
+
+::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--bs-primary);
+    border-radius: 15px;
+}
+.select-search-area label {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.select-search-area select {
+    width: 5rem;
+    background-position: calc(100% - 3px) 11px, calc(100% - 20px) 13px, 100% 0;
+    margin: 0 0.5rem;
+    display: inline-block;
+}
+
+.select-search-area input {
+    margin-left: 0.75rem;
+    width: auto;
+    display: inline-block;
+}
+
+
+.showColor{
+    width:20px;
+    height: 20px;
+    display: block;
+    border-radius: 5px;
+    border: 1px solid var(--bs-black);
+}
+.vs__dropdown-toggle{
+    padding: 6px !important;
+}
+
+.brand-card .card-body img{
+    max-height: 50px;
+    object-fit: contain;
+}
+
+
+
+// discount span design
+.discount-span-red{
+    border: 1px solid #ff9a9a;
+    background: #f59f9f5e;
+    color: black;
+}
+
+.discount-span-black{
+    border: 1px solid #051f424a;
+    background: #051f4238;
+    color: #051f42;
+}
+
+// images delete icons
+
+.delete-image-icon{
+    top: -6px;
+    right: 6px;
+    background: rgba(0, 0, 0, 0.5215686275);
+    padding: 2px;
+    color: white;
+    border-radius: 50px;
+}

@@ -1,0 +1,64 @@
+.card-bg-image{
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.card-bg-image .card-image-body{
+    box-shadow: 2px 3px 11px 2px #a9a7a794;
+    overflow: hidden;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    transition: 0.3s all ease;
+}
+.card-bg-image .card-image-body:hover{
+    box-shadow: 0 0px 14px 2px rgb(34 41 47 / 54%) !important;
+    transform: scale(1.04);
+}
+
+
+.add-1-card{
+    border: 1px solid #afb2b3;
+}
+.add-2-card{
+    border: 1px solid #fffdfb;
+}
+.add-3-card{
+    border: 1px solid #f2ebe5;
+}
+.add-1 {
+    color: black;
+    -webkit-text-fill-color: #00556a;
+    -webkit-text-stroke-width: 1px;
+    font-family: arial;
+    text-transform: capitalize;
+    font-weight: 800;
+    -webkit-text-stroke-color: #eafbff;
+}
+/*
+.add-2 {
+    color: black;
+    -webkit-text-fill-color: #fff6c7;
+    -webkit-text-stroke-width: 1px;
+    font-family: arial;
+    text-transform: capitalize;
+    font-weight: 800;
+    -webkit-text-stroke-color: #cd7700;
+}*/
+.add-2{
+    color: black;
+    -webkit-text-fill-color: #fdddea;
+    -webkit-text-stroke-width: 1px;
+    font-family: arial;
+    text-transform: capitalize;
+    font-weight: 800;
+    -webkit-text-stroke-color: #d7347b;
+}
+
+.add-3 {
+    color: black;
+    -webkit-text-fill-color: #fbefe1;
+    -webkit-text-stroke-width: 1px;
+    font-family: arial;
+    text-transform: capitalize;
+    font-weight: 800;
+    -webkit-text-stroke-color: #856a45;
+}
