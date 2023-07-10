@@ -26,10 +26,11 @@
 
     const deliveryPrice = ref(0);
     const discountPriceRef = ref(0)
-
+    const deliveryAddressId = ref(null)
     const isLoading = ref(false);
     const setAddress = (event) =>{
         deliveryPrice.value = event.order_area
+        deliveryAddressId.value = event.id;
     }
     const couponCode = ref(null);
     const couponError = ref(null);
@@ -82,6 +83,7 @@
                 totalItems:store.getCartLength,
                 cartTotalPrice:store.getCartTotalPrice,
                 address:deliveryPrice.value,
+                deliveryAddressId:deliveryAddressId.value,
                 couponData:couponData.value,
                 couponDiscount:discountPriceRef.value,
             },{
@@ -92,7 +94,7 @@
                 },
                 onSuccess: page => {
                     isLoading.value = false;
-                    isPaymentPage.value = true;
+                    // isPaymentPage.value = true;
                     $sToast.fire({
                         icon: 'success',
                         title: page.props.info.message,
@@ -119,8 +121,7 @@
 
 <template>
     <Layout>
-        <div class="container-sm mt-5">
-
+        <div class="container-sm mt-5" style="min-height: 100vh;">
         <!-- Address -->
             <div class="row">
                 <!-- Address left -->

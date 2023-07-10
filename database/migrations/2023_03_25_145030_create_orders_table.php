@@ -33,6 +33,9 @@ return new class extends Migration
             $table->enum('order_status', ['pending', 'received', 'process', 'shipped', 'delivered', 'cancel']);
             $table->enum('payment_status', ['pending', 'paid', 'due', 'cancel']);
             $table->boolean('isShow')->default(1);
+            $table->string('status')->default(null)->nullable();
+            $table->string('transaction_id')->default(null)->nullable();
+            $table->string('currency')->default(null)->nullable();
             $table->timestamps();
         });
     }

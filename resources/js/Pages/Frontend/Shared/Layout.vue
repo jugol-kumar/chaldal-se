@@ -56,7 +56,7 @@ onMounted(()=>{
 
 const search = ref(props?.search?.search)
 watch([search], debounce(function ([val]) {
-    if (val.length > 5 || val.length <= 0) {
+    if (val.length > 2 || val.length <= 0) {
         Inertia.get('/products', {search: val}, {preserveState: true, replace: true});
     }
 }, 300));
@@ -351,7 +351,7 @@ const pages = computed(() =>{
 
 
 
-        <div :class="showSidebar ? 'col-md-10' : 'col-md-12'" class="sm-mt-15-rm" style="overflow: hidden">
+        <div :class="showSidebar ? 'col-md-10' : 'col-md-12'" class="sm-mt-15-rm" style="overflow: hidden;">
             <slot/>
 
             <div style="height:60px;"  class="bg-primary text-black d-flex align-items-center justify-content-between p-3 sm-footer-style">

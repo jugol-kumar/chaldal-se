@@ -4,8 +4,10 @@
     import {onMounted, ref} from "vue";
     import {useCartStore} from "../../../Store/useCartStore";
     import {useForm} from "@inertiajs/inertia-vue3";
+    import axios from "axios";
     const props = defineProps({
         make_payment:null,
+        payment_ssl:null,
         info:[]|null,
         checkoutData:null,
     })
@@ -17,7 +19,7 @@
 
     const formData = useForm({
         tramsPolicy:null,
-        paymentMethod:null,
+        paymentMethod:'ssl',
     })
 
     const isLoading = ref(false)
@@ -26,46 +28,96 @@
             $toast.warning("Please check our trams and policies.")
         }else if(formData.paymentMethod === null){
             $toast.warning("Please select your payment method.")
-        }else{
-            Inertia.post(props.make_payment,{
+        }
+        // else if(formData.paymentMethod != null && formData.paymentMethod === 'ssl'){
+        //     axios.post(props.payment_ssl, {data: {}}).then((re) => console.log(re)).catch((er) => console.log(er));
+            // Inertia.post(props.payment_ssl,{
+            //     formData:formData,
+            //     cartItems:store.getCartItems,
+            //     totalItems:store.getCartLength,
+            //     cartTotalPrice:store.getCartTotalPrice
+            // },{
+            //     preserveState: true,
+            //     replace: true,
+            //     onSuccess: page => {
+            //         console.log(page)
+            //     },
+            //     onError: errors => {
+            //         document.getElementById('actionModal').$vb.modal.hide()
+            //         isLoading.value = false;
+            //         $toast.error("Validation Errors...")
+            //     }
+            // })
+        // }
+
+        else{
+            axios.post(props.make_payment, {
                 formData:formData,
                 cartItems:store.getCartItems,
                 totalItems:store.getCartLength,
                 cartTotalPrice:store.getCartTotalPrice
-            },{
-                preserveState: true,
-                replace: true,
-                onStart: res => {
-                    isLoading.value = true;
-                },
+            }).then((res) => {
+                console.log("call res");
+                console.log(res);
 
-                onSuccess: page => {
-                    isLoading.value = false;
-                    isPaymentPage.value = true;
-
+                if (res.data.status != 200){
                     $sToast.fire({
-                        icon: 'success',
-                        title: page.props.info.message,
+                        icon: 'error',
+                        title: res?.data?.message,
                     })
-                },
-
-                onError: errors => {
-                    document.getElementById('actionModal').$vb.modal.hide()
-                    isLoading.value = false;
-                    $toast.error("Validation Errors...")
+                    window.location.replace(res.data.url);
+                }else{
+                    window.location.replace(res.data.data.data);
+                    // window.open(res.data.data.data, '_blank');
                 }
+            }).catch((err) =>{
+                console.log("call err");
+                console.log(err)
             })
         }
+        // else{
+        //     Inertia.post(props.make_payment,{
+        //         formData:formData,
+        //         cartItems:store.getCartItems,
+        //         totalItems:store.getCartLength,
+        //         cartTotalPrice:store.getCartTotalPrice
+        //     },{
+        //         preserveState: true,
+        //         replace: true,
+        //         onStart: res => {
+        //             isLoading.value = true;
+        //         },
+        //
+        //         onSuccess: page => {
+        //             // isLoading.value = false;
+        //             // $sToast.fire({
+        //             //     icon: 'success',
+        //             //     title: page.props.info.message,
+        //             // })
+        //
+        //             console.log("its opend");
+        //             console.log(page)
+        //             // window.open(newRouteUrl, '_blank');
+        //
+        //         },
+        //
+        //         onError: errors => {
+        //             document.getElementById('actionModal').$vb.modal.hide()
+        //             isLoading.value = false;
+        //             $toast.error("Validation Errors...")
+        //         }
+        //     })
+        // }
 
     }
 
     onMounted(()=>{
         // store.clearCart();
         // store.initCart();
-        $sToast.fire({
-            icon: 'success',
-            title: 'Shipping Info Saved...',
-        })
+        // $sToast.fire({
+        //     icon: 'success',
+        //     title: 'Shipping Info Saved...',
+        // })
     })
 
 
@@ -73,7 +125,7 @@
 
 <template>
     <Layout>
-        <div class="container-sm my-5">
+        <div class="container-sm my-5" style="min-height: 100vh;">
             <!-- Payment -->
             <div id="checkout-payment" class="fv-plugins-bootstrap5 fv-plugins-framework">
                 <div class="row">

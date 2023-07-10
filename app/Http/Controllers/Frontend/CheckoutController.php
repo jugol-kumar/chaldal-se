@@ -34,9 +34,6 @@ class CheckoutController extends Controller
         $data = Request::all();
 
 
-//        return dd(Request::all());
-
-
         $deliveryCharge = 0;
         $couponDiscount = 0;
         if ($data['cartTotalPrice'] > $data['address']['charge_condition']){
@@ -51,7 +48,6 @@ class CheckoutController extends Controller
 
         $grandTotalWithDiscount = $data['cartTotalPrice'] - $couponDiscount;
         $grandTotal = $grandTotalWithDiscount + $deliveryCharge;
-
 
 
         if (Properties::$cartSaveDb){
@@ -80,7 +76,7 @@ class CheckoutController extends Controller
                 ],
                 "coupon_id" => Request::input('couponData') ? Request::input('couponData')['id'] : null,
                 "order_area_id" => Request::input('address')['id'],
-
+                "delivery_address_id" => $data['deliveryAddressId'],
                 "cart_total_price" => $data['cartTotalPrice'],
                 "delivery_charge" => $deliveryCharge,
                 "coupon_discount" => $couponDiscount,

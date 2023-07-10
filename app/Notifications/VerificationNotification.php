@@ -42,11 +42,15 @@ class VerificationNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-//                    ->action('Notification Action', url('/'))
-                    ->line("your Code Is: ".$this->user->verification_code)
-                    ->line('Thank you for using our application!');
+//        return (new MailMessage)
+//                    ->line('The introduction to the notification.')
+////                    ->action('Notification Action', url('/'))
+//                    ->line("your Code Is: ".$this->user->verification_code)
+//                    ->line('Thank you for using our application!');
+        return (new MailMessage)->view(
+            'verification',
+            ['user' => $this->user]
+        );
     }
 
     /**

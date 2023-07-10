@@ -91,7 +91,7 @@ const createUser = (type) =>{
 
 <template>
     <Layout>
-        <div class="login-page">
+        <div class="login-page" style="min-height: 100vh;">
             <div class="container-sm">
                 <div class="row my-5">
                     <div class="col-lg-10 offset-lg-1 sm-mt-2 sm-p-0" >

@@ -60,6 +60,7 @@ class CustomerController extends Controller
     }
 
     public function resendVerifyCode(){
+        return "called here";
         $user = Session::get('user');
         if($user){
             $user->verification_code = generate_code();

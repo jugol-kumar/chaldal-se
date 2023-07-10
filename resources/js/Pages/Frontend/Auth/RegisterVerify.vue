@@ -43,7 +43,7 @@ const checkVerify = () =>{
 
 <template>
     <Layout>
-        <div class="login-page">
+        <div class="login-page" style="min-height: 100vh;">
             <div class="container-sm">
                 <div class="row my-5">
                     <div class="col-lg-10 offset-lg-1 sm-mt-2 sm-p-0" >
@@ -62,7 +62,11 @@ const checkVerify = () =>{
                                             </div>
 
 
-                                            <p>Resend Mail<span class="text-primary fw-bold text-decoration-underline cursor-pointer" @click="hideMenu">CLick Me</span></p>
+                                            <p>Resend Mail
+                                                <a href="/customer/resend-verify-code" class="text-primary fw-bold text-decoration-underline cursor-pointer" @click="hideMenu">
+                                                    Click Me
+                                                </a>
+                                            </p>
 
                                             <div class="col-12">
                                                 <button type="submit" class="btn btn-primary px-4 float-end mt-4" :disabled="isLoading">Verify</button>
