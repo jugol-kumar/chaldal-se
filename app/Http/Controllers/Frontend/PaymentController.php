@@ -3,24 +3,20 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PaypalController;
 use App\Http\Helpers\Properties;
 use App\Library\SslCommerz\SslCommerzNotification;
 use App\Models\Address;
 use App\Models\Checkout;
-use App\Models\Customer;
 use App\Models\Order;
-use App\Models\OrderArea;
 use App\Models\OrderDetails;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\View;
-use Inertia\Inertia;
+use Session;
 
 class PaymentController extends Controller
 {
@@ -40,7 +36,7 @@ class PaymentController extends Controller
         $checkout = Session::get('checkoutData');
         if ($checkout){
             if (Request::input('formData')['paymentMethod'] == 'cod'){
-                $order = $this->saveOrder($checkout);
+                $order = $this->saveOrder($checkout, 'cod');
                 if ($order){
                     Session::forget('checkoutData');
                     if (Properties::$cartSaveDb) {
@@ -48,7 +44,6 @@ class PaymentController extends Controller
                             ->where('id', $checkout["data"]['id'],)->first();
                         $checkoutDetails->customerCart->delete();
                     }
-
                     return Response::json([
                         "status" => 500,
                         "order" => Order::orderBy('id', 'desc')->first()?->load('customer:id,name','address','orderDetails', 'orderDetails.product') ?? [],
@@ -64,8 +59,26 @@ class PaymentController extends Controller
                     ]);
                 }
             }
+            elseif (Request::input('formData')['paymentMethod'] == 'paypal'){
+                $order = $this->saveOrder($checkout, 'paypal');
+                $paypal = new PaypalController();
+                $payData = $paypal->payment($order);
+                $order->transaction_id = $payData['id'];
+                $order->save();
+                $paymentUrl = null;
+                foreach($payData['links'] as $item){
+                    if($item['rel'] === 'approval_url'){
+                        $paymentUrl = $item['href'];
+                    }
+                }
+                return Response::json([
+                    "status" => 500,
+                    "url" => $paymentUrl,
+                ]);
+
+            }
             else{
-                $order = $this->saveOrder($checkout);
+                $order = $this->saveOrder($checkout, 'SSL');
                 if ($order){
                     $res =$this->orderSSLPHP($order, $checkout);
                     if ($res){
@@ -98,7 +111,7 @@ class PaymentController extends Controller
         }
     }
 
-    private function saveOrder($checkout){
+    private function saveOrder($checkout, $method){
         $cartItems = [];
         if (Properties::$cartSaveDb) {
             $checkoutDetails = Checkout::with(['customerCart', 'orderArea'])
@@ -116,7 +129,7 @@ class PaymentController extends Controller
             "coupon_discount" => $checkout['data']['coupon_discount'],
             "grand_total" => $checkout['data']['grand_total'],
             'order_date' => now()->format('d-m-y'),
-            'payment_method' => Request::input('formData')['paymentMethod'],
+            'payment_method' => $method,
             'order_status' => 'pending',
             'payment_status' => 'pending',
         ]);

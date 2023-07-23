@@ -7,6 +7,7 @@ use App\Models\Advised;
 use App\Models\BusinessSetting;
 use App\Models\Category;
 use App\Models\Country;
+use App\Models\Currency;
 use App\Models\Gallery;
 use App\Models\Product;
 use Dotenv\Dotenv;
@@ -24,6 +25,7 @@ class BusinessSettingController extends Controller
             'main_url' => URL::route('admin.businessSave'),
             'categories' => Category::with('childrens')->get(),
             'updateSmtp' => URL::route('admin.updateSmtp'),
+            "currencies" => Currency::all(),
             'bSettings' =>[
                 'name'        => get_setting('name'),
                 'details'     => get_setting('app_details'),
@@ -34,6 +36,7 @@ class BusinessSettingController extends Controller
 
                 'timezone'    => json_decode(get_setting('timezone')),
                 'country'     => json_decode(get_setting('country')),
+                'show_currency'     => get_setting('show_currency'),
 
                 'address'     => get_setting('address'),
                 'phone'       => get_setting('phone'),

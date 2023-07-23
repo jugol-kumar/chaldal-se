@@ -86,8 +86,8 @@
         }
     }
     .avatar-preview {
-        width: 150px;
-        height: 150px;
+        width: 100px;
+        height: 100px;
         position: relative;
         border-radius: 100%;
         border: 6px solid var(--bs-primary);

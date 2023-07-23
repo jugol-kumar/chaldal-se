@@ -116,7 +116,7 @@ const updateProfileImage = () =>{
                     </div>
                 </div>
 
-                <div class="col-md-8 ms-1">
+                <div class="col-md-9 ms-1">
                     <div class="tab-content" id="v-pills-tabContent">
                         <slot/>
                     </div>

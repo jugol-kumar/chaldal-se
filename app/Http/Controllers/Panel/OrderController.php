@@ -13,7 +13,7 @@ class OrderController extends Controller
     public function index(){
         return inertia('Order/Orders',[
             'orders' => Order::query()
-                ->with(['orderDetails', 'customer'])
+                ->with(['orderDetails', 'customer', 'orderRefand'])
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('title', 'like', "%{$search}%")
                         ->orWhereHas('childrens', function ($developer) use($search){
@@ -33,12 +33,13 @@ class OrderController extends Controller
     }
 
     public function singleOrder($id){
-        $order = Order::findOrFail($id)->load('orderDetails', 'customer', 'address', 'orderDetails.product');
+        $order = Order::findOrFail($id)->load('orderDetails', 'customer', 'address', 'orderDetails.product', 'orderRefand');
         return inertia('Order/OrderDetails',[
             'order' => $order,
             'url' => [
                 'oSChange' => URL::route('admin.order.changeOrderStatus', $order->id),
-                'pSChange' => URL::route('admin.order.changePaymentStatus', $order->id)
+                'pSChange' => URL::route('admin.order.changePaymentStatus', $order->id),
+                'rSChange' => URL::route('admin.order.chandeRefandStatus', $order->id)
             ]
         ]);
     }
@@ -55,10 +56,14 @@ class OrderController extends Controller
         return back();
     }
 
+    public function chandeRefandStatus($id){
+        $order = Order::with("orderRefand")->findOrFail($id);
+        $order->orderRefand()->update(['status' => Request::input('status')]);
+        return back();
+    }
+
     public function printInvoice($id){
         $order = Order::findOrFail($id)->load('orderDetails', 'customer', 'address', 'orderDetails.product');
-
-//        return $order;
         return inertia('Order/PrintInvoice', [
             'order' => $order
         ]);

@@ -115,41 +115,54 @@
 
                     <li class=" nav-item">
                         <Link preserve-scroll class="d-flex align-items-center" :href="`${this.$page.props.auth.ADMIN_URL}/coupon`">
-                            <vue-feather type="cloud-drizzle" />
+                            <vue-feather type="gift" />
                             <span class="menu-title text-truncate" data-i18n="Dashboards">Coupon</span>
                         </Link>
                     </li>
 
                     <li class=" nav-item">
-                        <Link preserve-scroll class="d-flex align-items-center" :href="`${this.$page.props.auth.ADMIN_URL}/promo`">
+                        <Link preserve-scroll class="d-flex align-items-center" :href="`${this.$page.props.auth.ADMIN_URL}/sliders`">
                             <vue-feather type="cloud-drizzle" />
-                            <span class="menu-title text-truncate" data-i18n="Dashboards">Promo</span>
+                            <span class="menu-title text-truncate" data-i18n="Dashboards">Slider</span>
                         </Link>
                     </li>
 
 
+                    <li class=" nav-item">
+                        <Link preserve-scroll class="d-flex align-items-center" :href="`${this.$page.props.auth.ADMIN_URL}/promo`">
+                            <vue-feather type="cpu" />
+                            <span class="menu-title text-truncate" data-i18n="Dashboards">Promo</span>
+                        </Link>
+                    </li>
+
                     <li class=" nav-item has-sub" :class="{'open' : clickMenu === 3}" @click.prevent="toggleSubMenu(3)">
                         <a preserve-scroll class="d-flex align-items-center">
                             <vue-feather type="wifi" />
-                            <span class="menu-title text-truncate" data-i18n="Dashboards">Advised</span>
+                            <span class="menu-title text-truncate" data-i18n="Dashboards">Adds</span>
                         </a>
                         <ul class="menu-content">
                             <li class=" nav-item">
                                 <Link preserve-scroll class="d-flex align-items-center" :href="`${this.$page.props.auth.ADMIN_URL}/advised`">
                                     <vue-feather type="circle" />
-                                    <span class="menu-title text-truncate" data-i18n="Dashboards">Create Advised</span>
+                                    <span class="menu-title text-truncate" data-i18n="Dashboards">Create Adds</span>
                                 </Link>
                             </li>
                             <li class=" nav-item">
                                 <Link preserve-scroll class="d-flex align-items-center" :href="`${this.$page.props.auth.ADMIN_URL}/all-advised`">
                                     <vue-feather type="circle" />
-                                    <span class="menu-title text-truncate" data-i18n="Dashboards">All Advised</span>
+                                    <span class="menu-title text-truncate" data-i18n="Dashboards">All adds</span>
                                 </Link>
                             </li>
                         </ul>
                     </li>
 
 
+                    <li class=" nav-item">
+                        <Link preserve-scroll class="d-flex align-items-center" :href="`${this.$page.props.auth.ADMIN_URL}/refunds`">
+                            <vue-feather type="corner-up-left" />
+                            <span class="menu-title text-truncate" data-i18n="Dashboards">Refunds</span>
+                        </Link>
+                    </li>
 
                     <li class=" nav-item">
                         <Link preserve-scroll class="d-flex align-items-center" :href="`${this.$page.props.auth.ADMIN_URL}/settings`">

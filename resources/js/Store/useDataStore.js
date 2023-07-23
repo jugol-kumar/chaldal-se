@@ -10,7 +10,8 @@ export const useDataStore = defineStore('data', {
 
         settingItem:[],
 
-        authData:{}
+        authData:{},
+
     }),
 
     actions:{

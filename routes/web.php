@@ -18,8 +18,11 @@ use App\Http\Controllers\Panel\PageController;
 use App\Http\Controllers\Panel\ProductController;
 
 use App\Http\Controllers\Panel\PromoController;
+use App\Http\Controllers\Panel\RefundController;
+use App\Http\Controllers\Panel\SliderController;
 use App\Http\Controllers\Panel\SubCategoryController;
 use App\Http\Controllers\Panel\UserController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\SslCommerzPaymentController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Request;
@@ -52,6 +55,9 @@ Route::controller(HomeController::class)->name('frontend.')->group(function(){
     Route::get('/category/{slug}', 'showSubCategories')->name('showSubCategories');
     Route::get('/sub-category/{slug}', 'showChildCategories')->name('showChildCategories');
     Route::get('/child-category/{slug}', 'showChildCategoriesProducts')->name('showChildCategoriesProducts');
+
+
+    Route::get('/single-promo-show/{id}', 'showSinglePromo')->name('showSinglepromo');
 });
 
 Route::controller(App\Http\Controllers\Frontend\ProductController::class)->name('product.')->group(function(){
@@ -75,11 +81,13 @@ Route::middleware('customer')->group(function(){
     Route::post('/make-payment', [PaymentController::class, 'makePayment'])->name('makePayment');
     Route::get('/make-payment', [PaymentController::class, 'orderComplete'])->name('orderComplete');
 
+    Route::get('/customer/orders', [CustomerController::class, 'customerOrders'])->name('customerOrders');
+    Route::get('/customer/cancel-order/{id}', [CustomerController::class, 'cancelOrder'])->name('customerOrderCancel');
+
     Route::post('/update-user-profile', [CustomerController::class, 'updateProfile'])->name('updateProfile');
     Route::post('/update-user-credentials', [CustomerController::class, 'updatePassword'])->name('updatePassword');
 
     Route::post('/update-profile-image', [CustomerController::class, 'updateProfileImage'])->name('updateProfileImage');
-    ROute::get('/customer/orders', [CustomerController::class, 'customerOrders'])->name('customerOrders');
     ROute::get('/customer/profile', [CustomerController::class, 'customerProfile'])->name('customerProfile');
 
     Route::get("/given-password", [CustomerController::class, 'gotoGivenPassword'])->name('gotoGivenPassword');
@@ -94,6 +102,8 @@ Route::middleware('customer')->group(function(){
 
     Route::get('/single-order/{id}', [CustomerController::class,'singleOrder'])->name('singleOrder');
     Route::get('print-invoice/{id}', [CustomerController::class, 'printInvoice'])->name('printInvoice');
+
+    Route::post('/save-refand-request', [CustomerController::class, 'saveRefand'])->name('saveRefandReqs');
 });
 
 Route::prefix('customer')->name('customer.')->middleware( 'guest')->group(function (){
@@ -147,12 +157,18 @@ Route::prefix('panel')->name('admin.')->middleware(['auth','web', 'admin'])->gro
         Route::get('/orders', 'index')->name('index');
         Route::get('/change-order-status/{id}', 'changeOrderStatus')->name('changeOrderStatus');
         Route::get('/change-payment-status/{id}', 'changePaymentStatus')->name('changePaymentStatus');
+        Route::get('/change-refand-status/{id}', 'chandeRefandStatus')->name('chandeRefandStatus');
         Route::get('/single-order/{id}', 'singleOrder')->name('singleOrder');
         Route::get('print-invoice/{id}', 'printInvoice')->name('printInvoice');
     });
 
     // order area
     Route::resource('order-area', OrderAreaController::class);
+
+    // manage order refund
+    Route::get('/refunds', [RefundController::class, 'index'])->name('refund.index');
+    Route::get('/refunds/{id}', [RefundController::class, 'show'])->name('refund.show');
+    Route::get('/refunds-change-status/{id}', [RefundController::class, 'chandeRefandStatus'])->name('refund.rSChange');
 
 
     // coupon discount
@@ -165,8 +181,16 @@ Route::prefix('panel')->name('admin.')->middleware(['auth','web', 'admin'])->gro
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
     // manage banners
-    Route::get('/promo', [PromoController::class, 'promos'])->name('promos');
-    Route::post('/save-promo', [PromoController::class, 'savePromo'])->name('savePromo');
+    Route::get('/sliders', [SliderController::class, 'promos'])->name('sliders');
+    Route::post('/save-slider', [SliderController::class, 'savePromo'])->name('saveSlider');
+
+    // manage promo
+    Route::get('/promo', [PromoController::class, 'index'])->name('promos');
+    Route::get('/create-promo', [PromoController::class, 'create']);
+    Route::post('/store-promo', [PromoController::class, 'store'])->name('promos.create');
+    Route::get('/show-promo/{id}', [PromoController::class, 'show'])->name('promos.show');
+    Route::post('/update-promo/{id}', [PromoController::class, 'update'])->name('promos.update');
+
 
     // manage ads
     Route::get('all-advised', [AdvisedController::class, 'allAdvisedIndex'])->name('allAdvisedIndex');
@@ -196,6 +220,9 @@ Route::prefix('panel')->name('admin.')->middleware(['auth','web', 'admin'])->gro
     Route::post('/update-admin-profile', [CustomerController::class, 'updateProfile'])->name('updateProfile');
     Route::post('/update-admin-credentials', [CustomerController::class, 'updatePassword'])->name('updatePassword');
     Route::post('/update-profile-image', [CustomerController::class, 'updateProfileImage'])->name('updateProfileImage');
+
+
+
 });
 
 
@@ -216,6 +243,11 @@ Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
 //SSLCOMMERZ END
 
 
+// paypal start
+    Route::post('pay/paypal', [PaypalController::class, 'payment'])->name('paypal.payment');
+    Route::get('payment/success', [PaypalController::class, 'success'])->name('paypal_success');
+    Route::get('payment/cancel', [PaypalController::class, 'cancel'])->name('paypal_cancel');
+// paypal end
 
 
 Route::view('ver-email', 'verification');

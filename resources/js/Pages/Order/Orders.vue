@@ -47,6 +47,7 @@
                             <th class="sorting">Order Status</th>
                             <th class="sorting">Payment Method</th>
                             <th class="sorting">Payment Status</th>
+                            <th class="sorting">Refand Status</th>
                             <th class="sorting"></th>
                         </tr>
                         </thead>
@@ -63,6 +64,9 @@
 
                             <td>
                                 <span class="badge bg-light-primary text-capitalize">{{ order.item.payment_status }}</span>
+                            </td>
+                            <td>
+                                <span v-if="order.item?.order_refand" class="badge bg-light-primary text-capitalize">{{ order.item?.order_refand?.status}}</span>
                             </td>
                             <td class="order-action d-flex align-items-center">
                                 <a :href="$page.props.auth.ADMIN_URL+'/single-order/'+order.item.id" class="btn btn-icon btn-gradient-primary btn-sm me-1" v-c-tooltip="'Show This Invoice.'">

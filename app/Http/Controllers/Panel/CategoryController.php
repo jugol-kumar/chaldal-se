@@ -124,10 +124,6 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
-
-//        $category = Category::getAll();
-
-
         if (Request::hasFile('icon')){
             $icon = Request::file('icon')->store('uploads/all', 'public');
             fileResize(Request::file('icon'), $icon, 60, 60);

@@ -58,18 +58,24 @@
                 cartTotalPrice:store.getCartTotalPrice
             }).then((res) => {
                 console.log("call res");
-                console.log(res);
+                console.log(res.data);
 
                 if (res.data.status != 200){
-                    $sToast.fire({
-                        icon: 'error',
-                        title: res?.data?.message,
-                    })
                     window.location.replace(res.data.url);
-                }else{
+                }
+                else{
                     window.location.replace(res.data.data.data);
                     // window.open(res.data.data.data, '_blank');
                 }
+
+                // if (res.data.state === "paypal"){
+                //     // window.location.replace(res.data.data);
+                //     console.log("call here paypal res")
+                //     console.log(res.data)
+                // }else{
+                // }
+
+
             }).catch((err) =>{
                 console.log("call err");
                 console.log(err)
@@ -129,14 +135,14 @@
             <!-- Payment -->
             <div id="checkout-payment" class="fv-plugins-bootstrap5 fv-plugins-framework">
                 <div class="row">
-                    <div class="col-xl-6 mb-3 mb-xl-0 mx-auto">
+                    <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Select your payment method</h4>
                             </div>
                             <div class="card-body">
                                 <div class="row custom-options-checkable g-1 match-height">
-                                    <div class="col-md">
+                                    <div class="col-md-4">
                                         <input class="custom-option-item-check" v-model="formData.paymentMethod"
                                                type="radio" name="customOptionsCheckableRadiosWithIcon"
                                                id="customOptionsCheckableRadiosWithIcon1" value="ssl" checked="">
@@ -147,7 +153,7 @@
                                         </label>
                                     </div>
 
-                                    <div class="col-md">
+                                    <div class="col-md-4">
                                         <input class="custom-option-item-check" v-model="formData.paymentMethod" type="radio"
                                                name="customOptionsCheckableRadiosWithIcon"
                                                id="customOptionsCheckableRadiosWithIcon2"
@@ -158,9 +164,24 @@
                                             <small>I am happy with cash on delivery</small>
                                         </label>
                                     </div>
+
+                                    <div class="col-md-4">
+                                        <input class="custom-option-item-check" v-model="formData.paymentMethod" type="radio"
+                                               name="customOptionsCheckableRadiosWithIcon"
+                                               id="paypal"
+                                               value="paypal">
+                                        <label class="custom-option-item text-center text-center p-1" for="paypal">
+                                            <img src="../../../../images/paypal.svg" width="175" class="p-1"/>
+                                            <span class="custom-option-item-title h4 d-block">Paypal</span>
+                                            <small>I am happy to pay with paypal</small>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="col-xl-6 mb-3 mb-xl-0 mx-auto">
                         <div class="col-sm-12">
                             <div class="form-check">
                                 <input class="form-check-input" v-model="formData.tramsPolicy"  type="checkbox" id="login">

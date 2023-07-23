@@ -144,13 +144,13 @@ watch([search, perPage], debounce(function ([val, val2]) {
     <layout>
         <div class="content-header row mb-1">
             <div class="col-12 d-flex align-items-center justify-content-between">
-                <h2 class="float-start mb-0">Category List</h2>
+                <h2 class="float-start mb-0">Coupon List</h2>
                 <button class="btn btn-sm btn-gradient-primary d-flex align-items-center"
                         @click="openAddCoupon"
                         type="button">
 
                     <vue-feather type="plus" size="15"/>
-                    <span>Add New Category</span>
+                    <span>Add New Coupon</span>
                 </button>
             </div>
         </div>

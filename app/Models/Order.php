@@ -26,4 +26,8 @@ class Order extends Model
         return $this->belongsTo(Address::class,'order_area_id');
     }
 
+    public function orderRefand(){
+        return $this->hasOne(OrderRefand::class);
+    }
+
 }

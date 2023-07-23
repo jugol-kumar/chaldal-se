@@ -1,5 +1,5 @@
 import {computed, watch, ref} from "vue";
-
+import axios from "axios"
 export function useData(){
     const tabs = [
         { name: 'From This Device', value: ['file'] },
@@ -66,8 +66,17 @@ export function useData(){
     const spanIsRed = true;
 
     // formatted price
-    const priceSignature = 'Kr';
-    const showSignBefore = true;
+    let priceSignature = null;
+    let showSignBefore = null;
+
+    const setBDCurrency = async () =>{
+        const country = await axios.get(`/get-setting?key=country`);
+        priceSignature = country.data.symbol ?? country.data.code
+
+        const isShowBefore = await axios.get(`/get-setting?key=show_currency`);
+        showSignBefore = isShowBefore.data;
+    }
+
     const priceStructure = (price) => showSignBefore ? `${priceSignature} ${price}` : `${price} ${priceSignature}`
 
     // discountPrice calculations
@@ -82,6 +91,6 @@ export function useData(){
 
 
 
-    return {markup, tabs, priceSignature, priceStructure, discountPrice, spanIsRed}
+    return {markup, tabs, priceSignature, priceStructure, discountPrice, setBDCurrency, spanIsRed}
 
 }

@@ -8,7 +8,8 @@ import {Inertia} from "@inertiajs/inertia";
 import CustomerLayout from "./CustomerLayout.vue";
 import CLayout from "./CLayout";
 import Pagination from "../../../components/Pagination.vue";
-
+import Modal from "../../../components/Modal.vue";
+import ImageUploader from "../../../components/ImageUploader.vue";
 const store = useWishListStore();
 const cartStore = useCartStore();
 const props = defineProps({
@@ -70,6 +71,37 @@ const updateCustomerPassword = () =>{
     })
 }
 
+const refadForm = useForm({
+    orderId:null,
+    region:null,
+    image:null,
+    message:null,
+})
+const refenadOrfer = (id) =>{
+    refadForm.orderId = id;
+    document.getElementById('referand_order').$vb.modal.show()
+}
+const submitRefand = () =>{
+    refadForm.post('/save-refand-request', {
+        preserveState: true,
+        replace: true,
+        onSuccess: page => {
+            isLoading.value = false;
+            refadForm.reset();
+            $sToast.fire({
+                icon: 'success',
+                title: page.props.info.message,
+            })
+            document.getElementById('referand_order').$vb.modal.hide()
+        },
+        onError: errors => {
+            document.getElementById('referand_order').$vb.modal.hide()
+            isLoading.value = false;
+            $toast.error("Validation Errors...")
+        }
+    })
+}
+
 
 
 </script>
@@ -91,7 +123,9 @@ const updateCustomerPassword = () =>{
                     </thead>
                     <tbody>
                     <tr v-for="order in orders.data" :key="order.id">
-                        <td>#{{$page.props.auth.APP_NAME+"_"+ order.id }}</td>
+                        <td>
+                            #{{$page.props.auth.APP_NAME+"_"+ order.id }}
+                        </td>
                         <td>
                             {{ $showPrice(order?.grand_total) }}
                         </td>
@@ -102,8 +136,10 @@ const updateCustomerPassword = () =>{
 
                         <td>
                             <span class="badge bg-light-primary text-capitalize">{{ order.payment_status }}</span>
+                            <info v-if="order.order_refand" :title="`Your Refand Status Is ${order.order_refand.status}`"/>
                         </td>
                         <td class="order-action d-flex align-items-center">
+
                             <a :href="$page.props.auth.MAIN_URL+'/single-order/'+order.id" class="btn btn-icon btn-gradient-primary btn-sm me-1"
                                v-c-tooltip="'Show This Invoice.'">
                                 <vue-feather type="eye" size="15"/>
@@ -113,17 +149,62 @@ const updateCustomerPassword = () =>{
                                v-c-tooltip="'Print This Invoice'">
                                 <vue-feather type="printer" size="15"/>
                             </a>
+
+                            <a v-if="order.payment_status === 'paid' && order.order_refand === null" href="javascript:void(0)"
+                               @click="refenadOrfer(order.id)"
+                               class="btn  btn-icon btn-gradient-danger btn-sm ms-1">
+                                <div class="d-flex align-items-center">
+                                    <vue-feather type="corner-up-left" size="15"/>
+                                    <span style="margin-left:2px;">Refand</span>
+                                </div>
+                            </a>
+
+                            <a v-else-if="order.payment_status !== 'paid' && order.order_status === 'pending'"
+                               :href="$page.props.auth.MAIN_URL+'/customer/cancel-order/'+order.id"
+                               class="btn  btn-icon btn-gradient-danger btn-sm ms-1">
+                                <div class="d-flex align-items-center">
+                                    <vue-feather type="x" size="15"/>
+                                    <span style="margin-left:2px;">Cancel</span>
+                                </div>
+                            </a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-
-
                 <Pagination :links="orders.links" :from="orders.from" :to="orders.to" :total="orders.total"/>
-
             </div>
         </div>
     </CLayout>
+
+
+
+    <Modal id="referand_order" title="Refand order" v-vb-is:modal size="md">
+        <div class="modal-body flex-grow-1">
+            <form @submit.prevent="submitRefand">
+                <div class="mb-1">
+                    <label>Region</label>
+                    <input v-model="refadForm.region" class="form-control" placeholder="e.g Order Region">
+                </div>
+
+                <div class="mb-1">
+                    <label>Icon Image</label>
+                    <ImageUploader v-model="refadForm.image"/>
+                </div>
+
+                <div class="mb-1">
+                    <label>About Refand</label>
+                    <textarea v-model="refadForm.message" class="form-control" placeholder="e.g About Your Problem" rows="8"></textarea>
+
+                </div>
+
+                <div class="d-flex flex-wrap mb-0">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="reset" class="btn btn-outline-secondary ms-1">Reset</button>
+                </div>
+            </form>
+        </div>
+    </Modal>
+
 </template>
 
 

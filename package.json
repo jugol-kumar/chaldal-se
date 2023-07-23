@@ -35,7 +35,7 @@
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@inertiajs/progress": "^0.2.7",
         "@inertiajs/vue3": "^1.0.2",
-        "@vuepic/vue-datepicker": "^5.2.0",
+        "@vuepic/vue-datepicker": "^5.4.0",
         "@vueup/vue-quill": "^1.1.1",
         "apexcharts": "^3.37.0",
         "bootstrap": "^5.1.3",

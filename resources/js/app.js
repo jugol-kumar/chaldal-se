@@ -27,9 +27,7 @@ import {useData} from "./Composables/useData";
 import moment from "moment";
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-
-
-
+import axios from "axios";
 
 
 // createInertiaApp({
@@ -57,6 +55,11 @@ import '@vuepic/vue-datepicker/dist/main.css'
 // });
 
 
+
+priceStr.setBDCurrency()
+
+
+let isShowBefore = await axios.get(`/get-setting?key=show_currency`);
 
 
 createInertiaApp({

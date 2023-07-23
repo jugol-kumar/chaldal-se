@@ -11,6 +11,7 @@
     import AdsSection from "./Modules/AdsSection.vue";
     import Layout from "./Shared/Layout.vue";
     import FeaturedCategories from "./Pages/FeaturedCategories.vue";
+    import Promo from "./Pages/Promo.vue";
     import Products from "./Pages/Products.vue";
     import {useDataStore} from "../../Store/useDataStore";
     import {useCartStore} from "../../Store/useCartStore";
@@ -25,6 +26,7 @@
         banners:[]|null,
 
         pageData:[]|null,
+        promos:[]|null,
     })
 
     const sliders = ref({pagination:false, navigation:false,})
@@ -83,6 +85,13 @@
             <FeaturedCategories :categories="props.pageData.homeCats"/>
 
 
+            <section>
+                <div class="p-5 promos">
+                    <div class="row justify-content-center" v-for="promo in promos" :key="promo.title">
+                        <Promo :promo="promo" v-if="new Date(promo.end_date) > new Date() && promo.status === 1" />
+                    </div>
+                </div>
+            </section>
 
 
             <section v-for="cats in store.getFeaturedCategories">

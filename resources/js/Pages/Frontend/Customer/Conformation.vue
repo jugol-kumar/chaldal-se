@@ -11,7 +11,7 @@
     })
     onMounted(() =>{
         store.clearCart();
-        store.initCart();
+        store.cart = [];
 
         dataStore.setSetting('header_logo');
         dataStore.setSetting('footer_logo');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\OrderArea;
+use App\Models\OrderRefand;
 use App\Models\User;
 use App\Notifications\VerificationNotification;
 use Illuminate\Support\Facades\Auth;
@@ -123,7 +124,7 @@ class CustomerController extends Controller
     public function dashboard()
     {
         return inertia('Frontend/Customer/Dashboard', [
-            'orders' => Auth::user()->orders()->latest()->paginate(10),
+            'orders' => Auth::user()->orders()->with("orderRefand")->latest()->paginate(10),
         ]);
     }
 
@@ -322,6 +323,34 @@ class CustomerController extends Controller
             'order' => $order
         ]);
     }
+
+    public function cancelOrder($id){
+        $order = Order::findOrFail($id);
+        $order->order_status = "cancel";
+        $order->save();
+        return  back();
+    }
+
+
+    public function saveRefand(){
+        $banner = null;
+        if (Request::hasFile('image')){
+            $banner = Request::file('image')->store('uploads/all', 'public');
+        }
+
+        OrderRefand::create([
+            'order_id' => Request::input('orderId'),
+            'region' => Request::input('region'),
+            'about_problem' => Request::input('message'),
+            'problem_image' => $banner
+        ]);
+
+        return back()->with('message', 'Refund Request Send');
+
+    }
+
+
+
 
 
 }

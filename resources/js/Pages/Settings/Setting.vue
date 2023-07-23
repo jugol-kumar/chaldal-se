@@ -95,6 +95,27 @@
                                                             <textarea class="form-control mb-1" v-model="createForm.app_details" placeholder="e.g Discribe some details about your application..."></textarea>
                                                         </div>
 
+                                                        <div class="col-12">
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <v-select
+                                                                        v-model="createForm.country"
+                                                                        dir="ltr"
+                                                                        label="country"
+                                                                        :options="currencies"
+                                                                        placeholder="~~ Select Country For Currency ~~"/>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <select id=""
+                                                                            class="form-control"
+                                                                            v-model="createForm.show_currency">
+                                                                        <option value="null" selected disabled>~~ Show Currency ~~</option>
+                                                                        <option value="true">Before Price</option>
+                                                                        <option value="false">After Price</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
                                                         <div class="col-12 mt-2 d-inline-flex align-item-center">
                                                             <button v-if="!isLoding" type="submit" disabled class="btn btn-primary me-1 waves-effect waves-float waves-light">
@@ -640,6 +661,7 @@ let props = defineProps({
     main_url:String|null,
     updateSmtp:String|null,
     categories:[]|null,
+    currencies:[]|null
 })
 
 let countries = props.countries;
@@ -660,7 +682,8 @@ let createForm = useForm({
     logo_fabs   : props.bSettings.logo_fabs ?? '',
     app_details : props.bSettings.details ?? '',
     timezone    : props.bSettings.timezone?.tz ?? '',
-    country     : props.bSettings.country?.name ?? '',
+    country     : props.bSettings.country ?? '',
+    show_currency: props.bSettings.show_currency ?? '',
 
     address     : props.bSettings.address ?? '',
     email       : props.bSettings.email ?? '',

@@ -1,11 +1,13 @@
 <script setup>
 
-import {computed, onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 import Layout from "../../Shared/Layout.vue";
 import Swal from "sweetalert2";
 import {useDataStore} from "../../Store/useDataStore";
+import Modal from "../../components/Modal.vue";
+import axios from "axios";
 
 const props = defineProps({
     order:Object|null,
@@ -53,16 +55,47 @@ const changePaymentStatus = (event) =>{
             $toast.error("Have an error. Try again..")
         }
     })
-    onMounted(() =>{
-        dataStore.setSetting('header_logo');
-        dataStore.setSetting('name');
-        dataStore.setSetting('address');
-        dataStore.setSetting('phone');
-        dataStore.setSetting('email');
-        dataStore.setSetting('footer_logo');
+}
+
+const isShow = ref(null);
+const showItem = (id, type) =>{
+    isShow.value = null;
+    axios.get(`/panel/refunds/${id}`).then((res) =>{
+        isShow.value = res.data;
+        console.log(res)
+        document.getElementById('showModal').$vb.modal.show()
+    }).catch((err) =>{
+        $toast.error(err.message)
     })
 }
 
+const changeRefandStatus = (event) =>{
+    Inertia.get(props.url.rSChange+`?status=${event.target.value}`,{status:event.target.value},{
+        preserveState: true,
+        replace: true,
+        onSuccess: page => {
+            $sToast.fire({
+                icon: 'success',
+                title: 'Payment Status Updated...'
+            })
+        },
+        onError: errors => {
+            $toast.error("Have an error. Try again..")
+        }
+    })
+}
+
+const showRefundProblem = () => alert("called");
+
+
+onMounted(() =>{
+    dataStore.setSetting('header_logo');
+    dataStore.setSetting('name');
+    dataStore.setSetting('address');
+    dataStore.setSetting('phone');
+    dataStore.setSetting('email');
+    dataStore.setSetting('footer_logo');
+})
 
 </script>
 
@@ -139,6 +172,18 @@ const changePaymentStatus = (event) =>{
                                             <option value="paid">Paid</option>
                                             <option value="cancel">Cancel</option>
                                         </select>
+
+                                    <div class="d-flex align-items-baseline">
+                                        <select v-if="order.order_refand" @change="changeRefandStatus" class="form-control mt-1">
+                                            <option value="null" disabled selected>Change Refand Status</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="cancel">Cancel</option>
+                                        </select>
+                                        <button class="btn btn-sm btn-primary" @click="showItem(order.order_refand.id)" v-c-tooltip="'Click Here for show Refund Problem Details.'">
+                                            <vue-feather type="info"  size="14"/>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <!--
@@ -266,6 +311,18 @@ const changePaymentStatus = (event) =>{
                 </div>
             </div>
         </section>
+
+
+        <Modal id="showModal" :title="isShow?.region" size="lg" v-vb-is:modal>
+            <div class="modal-body">
+                <h2>{{ isShow?.region }}</h2>
+                <img :src="isShow?.problem_image" class="w-100 h-100" alt="">
+                <p>About Problem: {{ isShow?.about_problem}}</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" data-bs-dismiss="modal" aria-label="Close">Ok</button>
+            </div>
+        </Modal>
     </Layout>
 </template>
 

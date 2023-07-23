@@ -13,6 +13,7 @@ use App\Models\ChildCategory;
 use App\Models\Coupon;
 use App\Models\Page;
 use App\Models\Product;
+use App\Models\Promo;
 use App\Models\SubCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -22,50 +23,41 @@ class HomeController extends Controller
 {
     public function home()
     {
-        $category = json_decode(get_setting('categoryId'));
-        $category = Category::with('products')->whereIn('id', $category??[])->get();
-
-
-        // home add 1
-        $ads1 = json_decode(get_setting('add1'));
-
-        $ads1?->items ? $ads1->items = Advised::whereIn('id', $ads1->items)->get() : [];
-
-        $ads2 = json_decode(get_setting('add2'));
-        $ads2?->items ? $ads2->items = Advised::whereIn('id', $ads2->items)->get() : [];
-
-        $topProducts = json_decode(get_setting('topProducts'));
-        $topProducts?->items ? $topProducts->items = Product::whereIn('id', $topProducts->items)->get() : [];
-
-        $topCategory = json_decode(get_setting('categories1'));
-        $topCategory?->items ? $topCategory->items = Category::whereIn('id', $topCategory->items)->with('products')->get() : [];
-
-        $homeCategories = json_decode(get_setting('categories2'));
-        $homeCategories?->items ? $homeCategories->items = Category::whereIn('id', $homeCategories->items)->with('products')->get() : [];
-
-        $ads4 = json_decode(get_setting('add4'));
-        $ads4?->items ? $ads4->items = Advised::whereIn('id', $ads4->items)->get() : [];
-
-        $add3 = json_decode(get_setting('add3'));
-        $add3?->items ? $add3->items = Advised::whereIn('id', $add3->items)->get() : [];
-
+//        $category = json_decode(get_setting('categoryId'));
+//        $category = Category::with('products')->whereIn('id', $category??[])->get();
+//
+//
+//        // home add 1
+//        $ads1 = json_decode(get_setting('add1'));
+//
+//        $ads1?->items ? $ads1->items = Advised::whereIn('id', $ads1->items)->get() : [];
+//
+//        $ads2 = json_decode(get_setting('add2'));
+//        $ads2?->items ? $ads2->items = Advised::whereIn('id', $ads2->items)->get() : [];
+//
+//        $topProducts = json_decode(get_setting('topProducts'));
+//        $topProducts?->items ? $topProducts->items = Product::whereIn('id', $topProducts->items)->get() : [];
+//
+//        $topCategory = json_decode(get_setting('categories1'));
+//        $topCategory?->items ? $topCategory->items = Category::whereIn('id', $topCategory->items)->with('products')->get() : [];
+//
+//        $homeCategories = json_decode(get_setting('categories2'));
+//        $homeCategories?->items ? $homeCategories->items = Category::whereIn('id', $homeCategories->items)->with('products')->get() : [];
+//
+//        $ads4 = json_decode(get_setting('add4'));
+//        $ads4?->items ? $ads4->items = Advised::whereIn('id', $ads4->items)->get() : [];
+//
+//        $add3 = json_decode(get_setting('add3'));
+//        $add3?->items ? $add3->items = Advised::whereIn('id', $add3->items)->get() : [];
+//
         $homeCats = Category::where('top', 1)->get();
 
+        $promos = Promo::with('products')->get();
 
         return inertia("Frontend/Index",[
-            'featuredCategories' => Category::where('featured', 1)->get(),
-            'featuredBrands' => Brand::with('products')->get(),
-            'homeCategory' => $category,
             'banners' => Banner::all(),
-
+            'promos' => $promos,
             'pageData' =>[
-                'add1' => $ads1 ?? [],
-                'add2' => $ads2 ?? [],
-                'add3' => $add3 ?? [],
-                'add4' => $ads4 ?? [],
-                'topProducts' => $topProducts ?? [],
-                'homeCategories' => $homeCategories ?? [],
-                'topCategories' => $topCategory ?? [],
                 'homeCats' => $homeCats,
             ]
 
@@ -177,5 +169,10 @@ class HomeController extends Controller
 
     }
 
+    public function showSinglePromo($id){
+        return inertia("Frontend/Pages/SingleDells", [
+            "promo" => Promo::with('products')->findOrFail($id),
+        ]);
+    }
 
 }

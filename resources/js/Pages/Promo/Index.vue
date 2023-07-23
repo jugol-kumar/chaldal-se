@@ -1,288 +1,133 @@
 <script setup>
 import layout from "../../Shared/Layout.vue";
-import AnimInput from '../../components/AnimInput.vue'
-import Modal from '../../components/Modal.vue'
-import {computed, onMounted, ref} from "vue";
-import {useForm} from "@inertiajs/inertia-vue3";
-import ImageUploader from "../../components/ImageUploader.vue";
-import Switch from "../../components/Switch.vue";
+import {ref, watch} from "vue";
+import debounce from "lodash/debounce";
 import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
-    banners:[]|null,
-    save_url:String|null,
-})
-
-
-let formData = useForm({
-    isNav:false,
-    isPeg:false,
-    autoPlay:false,
-    items: [
-        {
-            image:null,
-            url:null
-        }
-    ],
+    promos: Object|[]|null,
+    filters: Object,
+    url: String,
 });
 
-let addRow = () => {
-    formData.items.push({
-        image:null,
-        url:null
-    })
-}
+let search = ref(props.filters.search);
+let perPage = ref(props.filters.perPage);
 
-
-let deleteRow = (index) => formData.items.splice(index, 1)
-
-onMounted(() =>{
-    formData.isNav = props.banners[0]?.isNavigate;
-    formData.isPeg = props.banners[0]?.isPaginate;
-    formData.autoPlay = props.banners[0]?.autoPlay;
-    formData.items = JSON.parse(props.banners[0]['info'])?.length > 0 ? JSON.parse(props.banners[0]['info']) : formData.items;
-});
-
-
-
-
-
-const isLoading = ref(false)
-const savePromo = () =>{
-    Inertia.post(props.save_url, {formData:formData},{
-        preserveState: true,
-        replace: true,
-        onStart: res =>{
-            // console.log("res "+ res)
-            isLoading.value = true;
-        },
-        onSuccess: page => {
-            isLoading.value = false;
-            $sToast.fire({
-                icon: 'success',
-                title: 'Updated successfully done...'
-            })
-        },
-        onError: errors => {
-            isLoading.value = false;
-            $toast.error("Validation Errors...")
-        }
-    })
-}
-
-
+watch([search, perPage], debounce(function ([val, val2]) {
+    Inertia.get(props.url, {search: val, perPage: val2}, {preserveState: true, replace: true});
+}, 300));
 
 </script>
 
 <template>
     <layout>
-        <div class="content-body">
-            <div class="row">
-                <div class="col-md-6" >
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Variant</h4>
-                            <div class="row d-flex align-items-center">
-                                <div class="col-8 mx-auto">
-                                    <div class="input-group border-0 d-flex align-items-center mb-1" v-for="(variant, index) in formData.items">
-                                        <div class="d-flex flex-column">
-                                            <div>
-                                                <div v-show="variant.path && !formData.items[index].image">
-                                                    <img :src="$page.props.auth.MAIN_URL+'/storage/'+variant.path" alt="avatar" width="250" >
-                                                </div>
-                                                <ImageUploader v-model="formData.items[index].image"/>
-                                                <input type="text" class="form-control mb-1 rounded-start"
-                                                       placeholder="e.g https://example.com/?category=category_slug" v-model="formData.items[index].url" >
-                                            </div>
-                                            <button
-                                                v-if="index === formData.items.length - 1 "
-                                                class="btn btn-primary btn-sm float-end mb-1"
-                                                type="button"
-                                                @click="addRow()">
-                                                <vue-feather type="plus" size="20"/>
-                                            </button>
-                                            <button
-                                                v-else
-                                                class="btn btn-danger btn-sm float-end mb-1"
-                                                @click="deleteRow(index)"
-                                                data-repeater-delete
-                                                type="button">
-                                                <vue-feather type="trash" size="20"/>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        class="btn border btn-sm float-end mt-2"
-                                        type="button">
-                                        Clear
-                                    </button>
-                                    <button
-                                        class="btn btn-success btn-sm float-end mt-2 me-1"
-                                        type="button"
-                                        :disabled="isLoading"
-                                        @click="savePromo"
-                                        name="button">
-                                        Save Promo
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card">
-                        <div class="card-body text-center" v-c-tooltip="'If you want to enable home slider pagination icon then enable this.'">
-                            <Switch v-model="formData.isNav"  class="mb-1"/>
-                            <span class="label">Navigation</span>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body text-center" v-c-tooltip="'If you want to enable home slider navigation button then enable this.'">
-                            <Switch v-model="formData.isPeg" class="mb-1"/>
-                            <span class="label">Pagination</span>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body text-center" v-c-tooltip="'If you want to enable home slider automaticity changed then enable it'">
-                            <Switch v-model="formData.autoPlay" class="mb-1"/>
-                            <span class="label">Autoplay</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            1. Product Wise Shipping Cost calulation: Shipping cost is calculate by addition of each product shipping cost.
-                        </li>
-                        <li class="list-group-item">
-                            2. Flat Rate Shipping Cost calulation: How many products a customer purchase, doesn't matter. Shipping cost is fixed.
-                        </li>
-                        <li class="list-group-item">
-                            3. Seller Wise Flat Shipping Cost calulation: Fixed rate for each seller. If customers purchase 2 product from two seller shipping cost is calculated by addition of each seller flat shipping cost.
-                        </li>
-                        <li class="list-group-item">
-                            4. Area Wise Flat Shipping Cost calulation: Fixed rate for each area. If customers purchase multiple products from one seller shipping cost is calculated by the customer shipping area. To configure area wise shipping cost go to Shipping Cities.
-                        </li>
-                    </ul>
-                </div>
-
+        <div class="content-header row mb-1">
+            <div class="col-12 d-flex align-items-center justify-content-between">
+                <h2 class="float-start mb-0">Flash Deals</h2>
+                <a :href="`${this.$page.props.auth.ADMIN_URL}/create-promo`" class="btn btn-sm btn-gradient-primary d-flex align-items-center"
+                        type="button">
+                    <vue-feather type="plus" size="15"/>
+                    <span>Add New Category</span>
+                </a>
             </div>
         </div>
 
 
+        <section class="app-user-list">
+            <!-- list and filter start -->
+            <div class="card">
+                <div class="card-datatable table-responsive pt-0">
+                    <div class="d-flex justify-content-between align-items-center header-actions mx-0 row mt-75">
+                        <div class="col-sm-12 col-lg-4 d-flex justify-content-center justify-content-lg-start">
+                            <div class="select-search-area">
+                                <label>Show <select class="form-select" v-model="perPage">
+                                    <option :value="undefined">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> entries</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-8 ps-xl-75 ps-0">
+                            <div
+                                class="d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
+                                <div class="select-search-area">
+                                    <label>Search:<input v-model="search" type="search" class="form-control"
+                                                         placeholder="Type here for search"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="user-list-table table">
+                        <thead class="table-light">
+                        <tr class="">
+                            <th class="sorting">#_SL</th>
+                            <th class="sorting">Title</th>
+                            <th class="sorting">Banner</th>
+                            <th class="sorting">Products</th>
+                            <th class="sorting">Valid Date</th>
+                            <th class="sorting">Status</th>
+                            <th class="sorting">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(promo, key) in promos" :key="promo.title">
+                            <td>
+                                {{ key+1 }}
+                            </td>
+                            <td>{{ promo.title }}</td>
+                            <td>
+                                <img :src="promo.banner" alt="" width="120">
+                            </td>
+                            <td>
+                                {{ promo.products_count }} Products
+                            </td>
+                            <td>
+                                {{ $formattedTime(promo.start_date, 'lll') }} - {{ $formattedTime(promo.end_date, 'lll') }}
+                            </td>
+                            <td>
+                                <span v-if="promo.status" class="badge badge-light-success">Active</span>
+                                <span v-else class="badge badge-light-warning">Inactive</span>
+                            </td>
+                            <td>
+                                <div class="btn-group dropup dropdown-icon-wrapper">
+                                    <button type="button"
+                                            class="btn dropdown-toggle dropdown-toggle-split waves-effect waves-float waves-light"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                                    </button>
+
+                                    <div class="dropdown-menu">
+                                        <span class="dropdown-item"
+                                              v-if="promo.status">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-left"><line x1="17" y1="7" x2="7" y2="17"></line><polyline points="17 17 7 17 7 7"></polyline></svg>
+                                            <span class="ms-1">Inactive</span>
+                                        </span>
+                                        <span class="dropdown-item" v-else>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                                            <span class="ms-1">Active</span>
+                                        </span>
+
+                                        <a :href="`${this.$page.props.auth.ADMIN_URL}/show-promo/${promo.id}`" class="dropdown-item">
+                                            <vue-feather type="edit"/>
+                                           <span class="ms-1">Edit</span>
+                                        </a>
+                                        <span class="dropdown-item">
+                                            <vue-feather type="trash"/>
+                                            <span class="ms-1">Delete</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- list and filter end -->
+        </section>
     </layout>
 </template>
 
-<style>
-.showColor{
-    width:20px;
-    height: 20px;
-    display: block;
-    border-radius: 5px;
-    border: 1px solid var(--bs-black);
-}
-.vs__dropdown-toggle{
-    padding: 6px !important;
-}
 
 
-.submit-button-gless{
-    position: relative;
-    padding: 20px 50px;
-    text-decoration: none;
-    color: #fff;
-    font-size: 2em;
-    text-transform: uppercase;
-    font-family: sans-serif;
-    letter-spacing: 4px;
-    overflow: hidden;
-    background: rgba(255,255,255,.1);
-    box-shadow: 0 5px 5px rgba(0,0,0.2);
-}
-.submit-button-gless:before{
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
-    background: rgba(255,255,255,.1);
-}
-.submit-button-gless:after{
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
-    transition: 0.5s;
-    transition-delay: 0.5s;
-}
-.submit-button-gless:hover:after{
-    left: 100%;
-}
-.submit-button-gless span{
-    position: absolute;
-    display: block;
-    transition: 0.5s ease;
-}
-.submit-button-gless span:nth-child(1)
-{
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: #fff;
-}
-.submit-button-gless:hover span:nth-child(1)
-{
-    width: 100%;
-    transform: translateX(100%);
-}
-.submit-button-gless span:nth-child(3)
-{
-    bottom: 0;
-    right: 0;
-    width: 0;
-    height: 1px;
-    background: #fff;
-}
-.submit-button-gless:hover span:nth-child(3)
-{
-    width: 100%;
-    transform: translateX(-100%);
-}
-.submit-button-gless span:nth-child(2)
-{
-    top: 0;
-    left: 0;
-    width: 1px;
-    height: 0;
-    background: #fff;
-}
-.submit-button-gless:hover span:nth-child(2)
-{
-    height: 100%;
-    transform: translateY(100%);
-}
-.submit-button-gless span:nth-child(4)
-{
-    bottom: 0;
-    right: 0;
-    width: 1px;
-    height: 0;
-    background: #fff;
-}
-.submit-button-gless:hover span:nth-child(4)
-{
-    height: 100%;
-    transform: translateY(-100%);
-}
-
-
-</style>
