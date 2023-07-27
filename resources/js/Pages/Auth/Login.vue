@@ -7,6 +7,10 @@
                 <div class="content-header row">
                 </div>
                 <div class="content-body">
+                    <div class="text-center mt-5">
+                        <p><strong>Login Id: </strong>admin@admin.com</p>
+                        <p><strong>Password: </strong>12345678</p>
+                    </div>
                     <div class="auth-wrapper auth-basic px-2">
                         <div class="auth-inner my-2">
                             <!-- Login basic -->
@@ -15,8 +19,6 @@
                                     <a href="/" class="d-flex justify-content-center align-items-center">
                                         <img :src="`${$page.props.auth.MAIN_URL}/images/logo.png`" alt="" width="60">
                                     </a>
-
-
                                     <form class="auth-login-form mt-2" @submit.prevent="submit">
                                         <div class="mb-1">
                                             <label for="login-email" class="form-label">Email</label>

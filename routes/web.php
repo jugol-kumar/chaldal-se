@@ -103,7 +103,10 @@ Route::middleware('customer')->group(function(){
     Route::get('/single-order/{id}', [CustomerController::class,'singleOrder'])->name('singleOrder');
     Route::get('print-invoice/{id}', [CustomerController::class, 'printInvoice'])->name('printInvoice');
 
+    Route::get('/customer/wishlist', [CustomerController::class, 'wishlist'])->name('wishlist');
+
     Route::post('/save-refand-request', [CustomerController::class, 'saveRefand'])->name('saveRefandReqs');
+    Route::get('/customer/order-refunds', [CustomerController::class, 'refunds'])->name('refunds');
 });
 
 Route::prefix('customer')->name('customer.')->middleware( 'guest')->group(function (){

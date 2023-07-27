@@ -97,6 +97,12 @@ const createUser = (type) =>{
                     <div class="col-lg-10 offset-lg-1 sm-mt-2 sm-p-0" >
                         <div class="bg-white shadow rounded">
                             <div class="row mt-5">
+                                <div class="text-center mt-5">
+                                    <p>
+                                        <strong>Customer Id: </strong>customer@customer.com</p>
+                                    <p><strong>Password: </strong>12345678</p>
+                                </div>
+
                                 <div class="col-md-7 pe-0 mx-auto">
                                     <div class="form-left h-100 py-2 px-2 py-lg-5 px-lg-5">
                                         <form @submit.prevent="validUser('login')" class="row g-1" v-if="changeViewRef">

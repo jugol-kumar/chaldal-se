@@ -421,8 +421,8 @@ const pages = computed(() =>{
                             </dl>
                         </div>
                         <div class="d-grid mb-3">
-                            <a :href="$page.props.auth.MAIN_URL+'/checkout'" v-if="cartStore.getCartLength > 0" class="btn btn-primary btn-next">Place Order here</a>
-                            <button v-else disabled="true" class="btn btn-primary btn-next" v-c-tooltip="'Add Product On Your Cart Before Plase Order'">Place Order here</button>
+                            <a :href="$page.props.auth.MAIN_URL+'/checkout'" v-if="cartStore.getCartLength > 0" class="btn btn-primary btn-next">Place Order</a>
+                            <button v-else disabled="true" class="btn btn-primary btn-next" v-c-tooltip="'Add Product On Your Cart Before Plase Order'">Place Order</button>
                         </div>
                     </div>
                 </div>

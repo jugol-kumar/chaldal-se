@@ -64,19 +64,19 @@ const showProductDetails =()=>document.getElementById(props.product.slug).$vb.mo
     })
 
     const addToWishList = (product) =>{
-        if (discountPrice.value){
-            if(cartSize.value !== null){
-                watchlistStore.addToWishList({...product, quantity:1, size:cartSize, sellPrice:discountPrice.value})
-            }else{
-                $toast.warning("Please chose first your needed size...")
-            }
-        }else{
-            if(cartSize.value !== null){
-                watchlistStore.addToWishList({...product, quantity:1, size:cartSize, sellPrice:product.price })
-            }else{
-                $toast.warning("Please chose first your needed size...")
-            }
-        }
+        // if (discountPrice.value){
+        //     if(cartSize.value !== null){
+        //         watchlistStore.addToWishList({...product, quantity:1, size:cartSize, sellPrice:discountPrice.value})
+        //     }else{
+        //         $toast.warning("Please chose first your needed size...")
+        //     }
+        // }else{
+        //     if(cartSize.value !== null){
+                watchlistStore.addToWishList({...product, quantity:1, size:cartSize, price:product.price })
+            // }else{
+            //     $toast.warning("Please chose first your needed size...")
+            // }
+        // }
     }
 
 
@@ -156,6 +156,19 @@ const showProductDetails =()=>document.getElementById(props.product.slug).$vb.mo
                         <vue-feather type="shopping-cart" class="me-50"/>
                         <span class="add-to-cart">{{ isInCart+" Item In Cart" }}</span>
                     </button>
+
+                    <button @click="watchlistStore.removeFromWishList(product)"
+                            v-if="watchlistStore.wishList.find(item => item.id === product.id)"
+                            class="btn btn-outline-secondary btn-wishlist me-0 me-sm-1 mb-1 mb-sm-0 d-flex align-items-center">
+                        <vue-feather type="heart" class="me-50"/>
+                        <span>Remove Form Wishlist</span>
+                    </button>
+
+                    <button @click="addToWishList(product)" v-else class="btn btn-outline-secondary btn-wishlist me-0 me-sm-1 mb-1 mb-sm-0 d-flex align-items-center">
+                        <vue-feather type="heart" class="me-50"/>
+                        <span>Add To Wishlist</span>
+                    </button>
+
                 </div>
                 <p class="card-text mt-3 product-spesificaiton" v-html="product.specification"></p>
             </div>
@@ -166,7 +179,7 @@ const showProductDetails =()=>document.getElementById(props.product.slug).$vb.mo
 </template>
 
 
-<style scoped>
+<style>
 .offer{
   position: relative;
   cursor: pointer;
@@ -255,4 +268,9 @@ const showProductDetails =()=>document.getElementById(props.product.slug).$vb.mo
     overflow-x: hidden;
     overflow-y: scroll;
 }
+
+.modal-lg, .modal-xl {
+    --bs-modal-width: 1200px !important;
+}
 </style>
+

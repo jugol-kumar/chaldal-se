@@ -59,13 +59,13 @@ const checkVerify = () =>{
 
                                             <div class="col-12">
                                                 <label>Password<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control"  @input="clearPass" v-model="loginFormData.password" placeholder="Enter OTP Code">
+                                                <input type="password" class="form-control"  @input="clearPass" v-model="loginFormData.password" placeholder="Enter Password">
                                             </div>
 
                                             <div class="col-12">
                                                 <label>Conform password<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control"  @input="clearPass"
-                                                       v-model="loginFormData.conform_pas" placeholder="Enter OTP Code">
+                                                <input type="password" class="form-control"  @input="clearPass"
+                                                       v-model="loginFormData.conform_pas" placeholder="Enter Confirm Password">
                                             </div>
 
                                             <div class="col-12">

@@ -5,8 +5,6 @@ import {ref} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {usePage} from "@inertiajs/inertia-vue3";
 import UserImageWithUpload from "./UserImageWithUpload.vue"
-
-
 </script>
 
 <template>
@@ -58,7 +56,7 @@ import UserImageWithUpload from "./UserImageWithUpload.vue"
                                     </a>
                                 </li>
                                 <li class="border-bottom mb-0">
-                                    <a class="nav-link-style d-flex align-items-center px-4 py-1 active" href="/customer/address">
+                                    <a class="nav-link-style d-flex align-items-center px-4 py-1 active" href="/customer/wishlist">
                                         <vue-feather class="me-2" type="heart"/>
                                         Wish List
                                         <span class="fs-sm text-primary ms-auto">
@@ -67,8 +65,8 @@ import UserImageWithUpload from "./UserImageWithUpload.vue"
                                     </a>
                                 </li>
                                 <li class="border-bottom mb-0">
-                                    <a class="nav-link-style d-flex align-items-center px-4 py-1 active" href="/customer/address">
-                                        <vue-feather class="me-2" type="heart"/>
+                                    <a class="nav-link-style d-flex align-items-center px-4 py-1 active" href="/customer/order-refunds">
+                                        <vue-feather class="me-2" type="corner-up-left"/>
                                         Refound
                                         <span class="fs-sm text-primary ms-auto">
                                             <vue-feather type="arrow-right"/>

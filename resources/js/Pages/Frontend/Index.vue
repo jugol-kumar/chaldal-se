@@ -87,8 +87,8 @@
 
             <section>
                 <div class="p-5 promos">
-                    <div class="row justify-content-center" v-for="promo in promos" :key="promo.title">
-                        <Promo :promo="promo" v-if="new Date(promo.end_date) > new Date() && promo.status === 1" />
+                    <div class="row justify-content-center" v-for="promo in promos" :key="promo.title" >
+                        <Promo :promo="promo" v-if="new Date(promo?.end_date) > new Date() && promo.status === 1"/>
                     </div>
                 </div>
             </section>

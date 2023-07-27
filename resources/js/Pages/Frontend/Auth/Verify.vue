@@ -56,6 +56,7 @@ const checkVerify = () =>{
                     <div class="col-lg-10 offset-lg-1 sm-mt-2 sm-p-0" >
                         <div class="bg-white shadow rounded">
                             <div class="row mt-5">
+                                <p class="text-center mt-5"><strong>Password: </strong>12345678</p>
                                 <div class="col-md-7 pe-0 mx-auto">
                                     <div class="form-left h-100 py-2 px-2 py-lg-5 px-lg-5">
                                         <form @submit.prevent="checkVerify" class="row g-1">

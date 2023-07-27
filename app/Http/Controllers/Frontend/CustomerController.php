@@ -350,7 +350,16 @@ class CustomerController extends Controller
     }
 
 
+    public function wishlist(){
+        return inertia('Frontend/Customer/CustomerWishlist');
+    }
 
+    public function refunds(){
+         $refunds = Order::with('orderRefand')->whereHas('orderRefand')->get();
+        return inertia('Frontend/Customer/Refunds',[
+            'refunds' => $refunds
+        ]);
+    }
 
 
 }
